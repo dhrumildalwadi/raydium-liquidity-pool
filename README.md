@@ -50,7 +50,7 @@ node scripts/createAmmPool.js
 You can perform swaps by updating and running the `swapAmm` script. If you don't have the pool ID, you can obtain it by running the `getAmmPoolInfo` script.
 
 ```
-node scripts/createAmmPool.js
+node scripts/swapAmm.js
 ```
 
 ### Additional Notes
