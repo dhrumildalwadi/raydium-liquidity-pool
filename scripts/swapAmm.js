@@ -64,8 +64,8 @@ async function swapOnlyAmm(input) {
     'output token symbol',
     'output token name',
   );
-  const targetPool = 'pool id';
-  const inputTokenAmount = new TokenAmount(inputToken, new BN(5000000)); // input token amount
+  const targetPool = 'amm pool id';
+  const inputTokenAmount = new TokenAmount(inputToken, new BN(1000000000)); // input token amount (1)
   const slippage = new Percent(1, 100);
   const walletTokenAccounts = await getWalletTokenAccount(
     connection,

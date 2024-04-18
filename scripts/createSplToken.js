@@ -1,4 +1,3 @@
-const {} = require('@solana/web3.js');
 const {
   createMint,
   getOrCreateAssociatedTokenAccount,
@@ -6,7 +5,7 @@ const {
 } = require('@solana/spl-token');
 const { connection, wallet: payer } = require('../config');
 
-const createSplToken = (async () => {
+(async () => {
   try {
     const mintAuthority = payer;
     const freezeAuthority = payer;
@@ -17,7 +16,7 @@ const createSplToken = (async () => {
       payer,
       mintAuthority.publicKey,
       freezeAuthority.publicKey,
-      9,
+      9, // decimal
     );
 
     // getting/creating your token account associated with the above mint token
@@ -37,6 +36,9 @@ const createSplToken = (async () => {
       mintAuthority,
       1000000000000000000n, // amount
     );
+
+    console.log('Token Address:', tokenAccount.address);
+    console.log('Mint Address:', tokenAccount.mint);
   } catch (err) {
     console.log(err);
   }

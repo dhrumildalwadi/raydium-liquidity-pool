@@ -1,3 +1,4 @@
 node_modules/
-keypair.json
-metadata.json
+secretKey.json
+
+.env

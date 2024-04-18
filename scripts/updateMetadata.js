@@ -1,4 +1,4 @@
-const { clusterApiUrl, Connection, PublicKey } = require('@solana/web3.js');
+const { clusterApiUrl, PublicKey } = require('@solana/web3.js');
 const { createUmi } = require('@metaplex-foundation/umi-bundle-defaults');
 const {
   createMetadataAccountV3,
@@ -9,10 +9,10 @@ const {
 } = require('@metaplex-foundation/umi-web3js-adapters');
 const { createSignerFromKeypair } = require('@metaplex-foundation/umi');
 const { base58 } = require('@metaplex-foundation/umi/serializers');
-const { connection, wallet: payer } = require('../config');
+const { wallet: payer } = require('../config');
 
 const uploadMetadataForToken = async (offChainMetadata) => {
-  const endpoint = clusterApiUrl('devnet');
+  const endpoint = clusterApiUrl(`${process.env.SOLANA_NETWORK}`);
 
   const umi = createUmi(endpoint);
 
@@ -24,16 +24,14 @@ const uploadMetadataForToken = async (offChainMetadata) => {
 
   let CreateMetadataAccountV3Args = {
     //accounts
-    mint: fromWeb3JsPublicKey(
-      new PublicKey('FrEd3H3xPEhSJqtZYZx4JVqzesCsGZ2zeKSc9zvMXSLU'),
-    ),
+    mint: fromWeb3JsPublicKey(new PublicKey('token mint address')), // mint address of the token
     mintAuthority: signer,
     payer: signer,
     updateAuthority: keypair.publicKey,
     data: {
       name: offChainMetadata.name,
       symbol: offChainMetadata.symbol,
-      uri: offChainMetadata.image,
+      uri: offChainMetadata.uri,
       sellerFeeBasisPoints: 0,
       creators: null,
       collection: null,
@@ -54,11 +52,10 @@ const uploadMetadataForToken = async (offChainMetadata) => {
 
 (async () => {
   const offChainMetadata = {
-    name: 'Huh Token',
-    symbol: 'HUH',
-    description: 'Nothing much. Just a Huh cat meme token',
-    image:
-      'https://ipfs.io/ipfs/QmVXi53uuQ3467NBZ3hjkM5ouDbMvmgXxtpKTuVYJw5R5q',
+    name: 'token name',
+    symbol: 'token symbol',
+    description: 'token description',
+    uri: 'token uri',
   };
   await uploadMetadataForToken(offChainMetadata);
 })();

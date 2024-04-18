@@ -3,10 +3,15 @@ const {
   Liquidity,
   Token,
   TOKEN_PROGRAM_ID,
-  DEVNET_PROGRAM_ID,
 } = require('@raydium-io/raydium-sdk');
 const { PublicKey } = require('@solana/web3.js');
-const { connection, makeTxVersion, PROGRAMIDS, wallet } = require('../config');
+const {
+  connection,
+  makeTxVersion,
+  PROGRAMIDS,
+  wallet,
+  feeDestinationAddress,
+} = require('../config');
 const { buildAndSendTx, getWalletTokenAccount } = require('./util');
 
 const calcMarketStartPrice = (input) => {
@@ -27,7 +32,7 @@ const getMarketAssociatedPoolKeys = (input) => {
     quoteDecimals: input.quoteToken.decimals,
     marketId: input.targetMarketId,
     programId: PROGRAMIDS.AmmV4,
-    marketProgramId: DEVNET_PROGRAM_ID.OPENBOOK_MARKET,
+    marketProgramId: PROGRAMIDS.OPENBOOK_MARKET,
   });
 };
 
@@ -54,28 +59,26 @@ const ammCreatePool = async (input) => {
       associatedOnly: false,
       checkCreateATAOwner: true,
       makeTxVersion,
-      feeDestinationId: new PublicKey(
-        // '7YttLkHDoNj9wyDur5pM1ejNaAvT9X4eqaYcHQqtj2G5',  for mainnet
-        '3XMrhbv989VxAMi3DErLV9eJht1pHppW5LbKxe9fkEFR', // for devnet
-      ),
+      feeDestinationId: new PublicKey(feeDestinationAddress),
     });
 
   return {
     txids: await buildAndSendTx(initPoolInstructionResponse.innerTransactions),
+    address: initPoolInstructionResponse.address,
   };
 };
 
 (async () => {
   const baseToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('base token address'),
+    new PublicKey('base token mint address'),
     9, // decimals
     'token symbol',
     'token name',
   );
   const quoteToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('quote token address'),
+    new PublicKey('quote token mint address'),
     6, // decimals
     'token symbol',
     'token name',
@@ -108,8 +111,9 @@ const ammCreatePool = async (input) => {
     targetMarketId,
     wallet,
     walletTokenAccounts,
-  }).then(({ txids }) => {
+  }).then(({ txids, address }) => {
     /** continue with txids */
     console.log('txids', txids);
+    console.log('address', address.ammId);
   });
 })();

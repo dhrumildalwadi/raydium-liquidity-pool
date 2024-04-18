@@ -1,6 +1,5 @@
 const {
   buildSimpleTransaction,
-  findProgramAddress,
   SPL_ACCOUNT_LAYOUT,
   TOKEN_PROGRAM_ID,
 } = require('@raydium-io/raydium-sdk');
@@ -53,23 +52,8 @@ async function buildAndSendTx(innerSimpleV0Transaction, options) {
   return await sendTx(connection, wallet, willSendTx, options);
 }
 
-function getATAAddress(programId, owner, mint) {
-  const { publicKey, nonce } = findProgramAddress(
-    [owner.toBuffer(), programId.toBuffer(), mint.toBuffer()],
-    new PublicKey(''),
-  );
-  return { publicKey, nonce };
-}
-
-async function sleepTime(ms) {
-  console.log(new Date().toLocaleString(), 'sleepTime', ms);
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 module.exports = {
   sendTx,
   getWalletTokenAccount,
   buildAndSendTx,
-  getATAAddress,
-  sleepTime,
 };
