@@ -19,16 +19,16 @@ Before getting started, make sure to set up the `.env` as well as `secretKey.jso
   - PRIVATE_KEY: private key of your account
   - RPC_URL: public rpc url
 
+Install the node modules
+
+```
+npm i
+```
+
 To generate `secretKey.json`, run the following command:
 
 ```
 node scripts/exportSecretKey.js
-```
-
-Also install the node modules
-
-```
-npm i
 ```
 
 ### Step 2: Create SPL Token

@@ -3,7 +3,6 @@ require('dotenv').config();
 const {
   TxVersion,
   ENDPOINT: _ENDPOINT,
-  LOOKUP_TABLE_CACHE,
   MAINNET_PROGRAM_ID,
   DEVNET_PROGRAM_ID,
   RAYDIUM_MAINNET,
