@@ -1,3 +1,7 @@
+const baseTokenData = require('../data/metadata.json');
+const quoteTokenData = require('../data/quoteTokenData.json');
+const tokenDetails = require('../data/tokenDetails.json');
+const fs = require('fs');
 const {
   MarketV2,
   Token,
@@ -29,17 +33,17 @@ async function createMarket(input) {
 (async () => {
   const baseToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('base token mint address'),
-    9, // decimals
-    'token symbol',
-    'token name',
+    new PublicKey(tokenDetails.mintAccount),
+    baseTokenData.decimals, // decimals
+    baseTokenData.symbol,
+    baseTokenData.name,
   );
   const quoteToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('quote token mint address'),
-    6, // decimals
-    'token symbol',
-    'token name',
+    new PublicKey(quoteTokenData.address),
+    quoteTokenData.decimals, // decimals
+    quoteTokenData.symbol,
+    quoteTokenData.name,
   );
 
   createMarket({
@@ -48,6 +52,15 @@ async function createMarket(input) {
     wallet: wallet,
   }).then(({ txids, address }) => {
     console.log('txids', txids);
-    console.log('Market Id', address.marketId);
+    console.log('Market Id', address.marketId.toString());
+
+    const filePath = './data/pool.json';
+
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify({
+        marketId: address.marketId.toString(),
+      }),
+    );
   });
 })();

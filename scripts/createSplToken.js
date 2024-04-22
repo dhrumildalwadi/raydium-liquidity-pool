@@ -1,3 +1,5 @@
+const fs = require('fs');
+const metadata = require('../data/metadata.json');
 const {
   createMint,
   getOrCreateAssociatedTokenAccount,
@@ -34,11 +36,23 @@ const { connection, wallet: payer } = require('../config');
       mint,
       tokenAccount.address,
       mintAuthority,
-      1000000000000000000n, // amount
+      metadata.totalSupply, // amount
     );
 
-    console.log('Token Address:', tokenAccount.address);
-    console.log('Mint Address:', tokenAccount.mint);
+    const tokenAccountAddress = tokenAccount.address.toString();
+    const mintAccountAddress = tokenAccount.mint.toString();
+    console.log('Token Address:', tokenAccountAddress);
+    console.log('Mint Address:', mintAccountAddress);
+
+    const filePath = './data/tokenDetails.json';
+
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify({
+        tokenAccount: tokenAccountAddress,
+        mintAccount: mintAccountAddress,
+      }),
+    );
   } catch (err) {
     console.log(err);
   }

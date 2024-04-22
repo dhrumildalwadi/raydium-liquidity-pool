@@ -17,7 +17,8 @@ Before getting started, make sure to set up the `.env` as well as `secretKey.jso
 - Add the values to your environment variables
   - SOLANA_NETWORK: The cluster you want to run the scripts in. (Eg: 'mainnet', 'devnet')
   - PRIVATE_KEY: private key of your account
-  - RPC_URL: public rpc url
+  - PINATA_API_KEY: Your API Key for pinata SDK
+  - PINATA_SECRET_KEY: Your Secret Key for pinata SDK
 
 Install the node modules
 
@@ -31,6 +32,8 @@ To generate `secretKey.json`, run the following command:
 node scripts/exportSecretKey.js
 ```
 
+Add the
+
 ### Step 2: Create SPL Token
 
 Execute the `createSplToken` script using Node.js:
@@ -41,7 +44,7 @@ node scripts/createSplToken.js
 
 ### Step 3: Update Token Metadata
 
-We need to update the metadata of our token. In the `updateMetadata.js` file, update the token mint address and the Offchain metadata input. The format of `token URI` will be as follows:
+We need to update the metadata of our token. First we need to update our `metadata.json` file which is in the `data` directory. Update the values accordingly. The format of the content in `uri` will be as follows.
 
 ```
 {
@@ -52,7 +55,15 @@ We need to update the metadata of our token. In the `updateMetadata.js` file, up
 }
 ```
 
-Update the metadata by executing the `updateMetadata` script using Node.js:
+If you don't have an uri link, you can create one yourself by running `uploadMetadataToIpfs` script. Update the remaining fields in `metadata.json`, copy your desired image for the token in `./data/image` directory, and run the following command.
+
+```
+node scripts/uploadMetadataToIpfs.js
+```
+
+This script will upload your image as well as metadata in IPFS and update the `uri` field in metada.json.
+
+Now we can run the `updateMetadata` script as follows:
 
 ```
 node scripts/updateMetadata.js
@@ -63,13 +74,13 @@ node scripts/updateMetadata.js
 Revoke the mint and freeze authority with the following commands:
 
 ```
-spl-token authorize 'spl token mint address' mint --disable -u devnet --authority ./secretKey.json
-spl-token authorize 'spl token mint address' freeze --disable -u devnet --authority ./secretKey.json
+spl-token authorize 'spl token mint address' mint --disable -u devnet --authority ./data/secretKey.json
+spl-token authorize 'spl token mint address' freeze --disable -u devnet --authority ./data/secretKey.json
 ```
 
 ### Step 5: Create Openbook Market Id
 
-Before creating our pool, we need to create an `openbook market`. To get the `openbook market id` you need to update the `createOpenbookMarket.js` by updating the base token and quote token data and running the script as follows.
+Before creating our pool, we need to create an `openbook market`. Run the following command to get the same. It will store your openbook market Id in pool.json file in the data directory.
 
 ```
 node scripts/createOpenbookMarket.js
@@ -77,9 +88,7 @@ node scripts/createOpenbookMarket.js
 
 ### Step 6: Create AMM Pool
 
-Now that we have our openbook market id, we can proceed to create our liquidity pool. You need to update the base token and quote token data and update the value of openbook market id in `createAmmPool.js`.
-
-Update and run the `createAmmPool` script using Node.js:
+Now that we have our openbook market id, we can proceed to create our liquidity pool. You need to run the `createAmmPool` script and it will add ammId inside pool.json file.
 
 ```
 node scripts/createAmmPool.js
@@ -87,7 +96,7 @@ node scripts/createAmmPool.js
 
 ### Step 7: Perform Swap
 
-You can perform swaps by updating and running the `swapAmm` script. If you don't have the pool ID, you can obtain it by running the `getAmmPoolInfo` script.
+You can perform swaps by updating and running the `swapAmm` script. Update the input token and output token info and run the following script to perform the swap.
 
 ```
 node scripts/swapAmm.js

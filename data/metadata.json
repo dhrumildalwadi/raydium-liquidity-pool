@@ -1,0 +1,8 @@
+{
+  "name": "token name",
+  "symbol": "token symbol",
+  "description": "token description",
+  "uri": "token uri",
+  "decimals": 9,
+  "totalSupply": 1000000000000000000
+}

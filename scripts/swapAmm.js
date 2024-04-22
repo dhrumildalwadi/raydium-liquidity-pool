@@ -1,4 +1,5 @@
 const assert = require('assert');
+const pool = require('../data/pool.json');
 const {
   jsonInfo2PoolKeys,
   Liquidity,
@@ -64,8 +65,8 @@ async function swapOnlyAmm(input) {
     'output token symbol',
     'output token name',
   );
-  const targetPool = 'amm pool id';
-  const inputTokenAmount = new TokenAmount(inputToken, new BN(1000000000)); // input token amount (1)
+  const targetPool = pool.ammId;
+  const inputTokenAmount = new TokenAmount(inputToken, new BN(5000000));
   const slippage = new Percent(1, 100);
   const walletTokenAccounts = await getWalletTokenAccount(
     connection,

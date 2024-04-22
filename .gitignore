@@ -1,4 +1,6 @@
 node_modules/
 secretKey.json
+pool.json
+tokenDetails.json
 
 .env

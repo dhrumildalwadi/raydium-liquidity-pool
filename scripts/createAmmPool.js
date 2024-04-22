@@ -1,3 +1,8 @@
+const fs = require('fs');
+const baseTokenData = require('../data/metadata.json');
+const quoteTokenData = require('../data/quoteTokenData.json');
+const tokenDetails = require('../data/tokenDetails.json');
+const pool = require('../data/pool.json');
 const { BN } = require('bn.js');
 const {
   Liquidity,
@@ -71,19 +76,19 @@ const ammCreatePool = async (input) => {
 (async () => {
   const baseToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('base token mint address'),
-    9, // decimals
-    'token symbol',
-    'token name',
+    new PublicKey(tokenDetails.mintAccount),
+    baseTokenData.decimals, // decimals
+    baseTokenData.symbol,
+    baseTokenData.name,
   );
   const quoteToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('quote token mint address'),
-    6, // decimals
-    'token symbol',
-    'token name',
+    new PublicKey(quoteTokenData.address),
+    quoteTokenData.decimals, // decimals
+    quoteTokenData.symbol,
+    quoteTokenData.name,
   );
-  const targetMarketId = new PublicKey('openbook market id');
+  const targetMarketId = new PublicKey(pool.marketId);
   const addBaseAmount = new BN(1000000000000); // base token amount
   const addQuoteAmount = new BN(5000000); // quote token amount
   const startTime = Math.floor(Math.floor(Date.now() / 1000) + 30); // starts now
@@ -114,6 +119,15 @@ const ammCreatePool = async (input) => {
   }).then(({ txids, address }) => {
     /** continue with txids */
     console.log('txids', txids);
-    console.log('address', address.ammId);
+    console.log('Amm Id:', address.ammId.toString());
+
+    const filePath = './data/pool.json';
+
+    const rawData = fs.readFileSync(filePath);
+
+    let poolInfo = JSON.parse(rawData.toString());
+    poolInfo = { ...poolInfo, ammId: address.ammId.toString() };
+
+    fs.writeFileSync(filePath, JSON.stringify(poolInfo));
   });
 })();
