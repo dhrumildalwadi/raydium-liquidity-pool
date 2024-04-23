@@ -11,7 +11,7 @@ https://docs.solanalabs.com/cli/install
 
 ### Step 1: Configure
 
-Before getting started, make sure to set up the `.env` as well as `secretKey.json` file according to your environment and requirements.
+Before getting started, make sure to set up the `.env` as well as `secretKey.json` file according to your environment and requirements and also update the pool tokens info in `config.js` file.
 
 - Create a `.env` file at the root directory of the project and paste the contents of `.env.example`
 - Add the values to your environment variables
@@ -19,6 +19,7 @@ Before getting started, make sure to set up the `.env` as well as `secretKey.jso
   - PRIVATE_KEY: private key of your account
   - PINATA_API_KEY: Your API Key for pinata SDK
   - PINATA_SECRET_KEY: Your Secret Key for pinata SDK
+  - TOKEN_SYMBOL: Symbol of your token
 
 Install the node modules
 
@@ -32,7 +33,7 @@ To generate `secretKey.json`, run the following command:
 node scripts/exportSecretKey.js
 ```
 
-Add the
+We need to update the `metadata.json` and `quoteTokenData.json` file as well. Both the files are present in the `./data/network-name/token-symbol` directory, where `network-name` and `token-symbol` are same as the ones set in the `.env` file. Update the values accordingly. If you don't have token metadata uri then leave it empty, we'll visit again in step 3.
 
 ### Step 2: Create SPL Token
 
@@ -44,24 +45,13 @@ node scripts/createSplToken.js
 
 ### Step 3: Update Token Metadata
 
-We need to update the metadata of our token. First we need to update our `metadata.json` file which is in the `data` directory. Update the values accordingly. The format of the content in `uri` will be as follows.
-
-```
-{
-  name: 'token name',
-  symbol: 'token symbol',
-  description: 'token description',
-  image: 'token image url',
-}
-```
-
-If you don't have an uri link, you can create one yourself by running `uploadMetadataToIpfs` script. Update the remaining fields in `metadata.json`, copy your desired image for the token in `./data/image` directory, and run the following command.
+We need to update the metadata of our token. The data will be taken from the `metadata.json` file. If you don't have the token metadata uri, you can create one yourself by running `uploadMetadataToIpfs` script. Copy your desired image for the token in `./data/network-name/token-symbol/image` directory, and run the following command.
 
 ```
 node scripts/uploadMetadataToIpfs.js
 ```
 
-This script will upload your image as well as metadata in IPFS and update the `uri` field in metada.json.
+This script will upload your image as well as metadata in IPFS and update the `uri` field in `metadata.json`.
 
 Now we can run the `updateMetadata` script as follows:
 
