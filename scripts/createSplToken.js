@@ -1,11 +1,18 @@
+require('dotenv').config();
+
 const fs = require('fs');
-const metadata = require('../data/metadata.json');
+const {
+  connection,
+  wallet: payer,
+  network,
+  tokenSymbol,
+} = require('../config');
+const metadata = require(`../data/${network}/${tokenSymbol}/metadata.json`);
 const {
   createMint,
   getOrCreateAssociatedTokenAccount,
   mintTo,
 } = require('@solana/spl-token');
-const { connection, wallet: payer } = require('../config');
 
 (async () => {
   try {
@@ -44,7 +51,7 @@ const { connection, wallet: payer } = require('../config');
     console.log('Token Address:', tokenAccountAddress);
     console.log('Mint Address:', mintAccountAddress);
 
-    const filePath = './data/tokenDetails.json';
+    const filePath = `./data/${network}/${tokenSymbol}/tokenDetails.json`;
 
     fs.writeFileSync(
       filePath,

@@ -74,8 +74,8 @@ node scripts/updateMetadata.js
 Revoke the mint and freeze authority with the following commands:
 
 ```
-spl-token authorize 'spl token mint address' mint --disable -u devnet --authority ./data/secretKey.json
-spl-token authorize 'spl token mint address' freeze --disable -u devnet --authority ./data/secretKey.json
+spl-token authorize 'spl token mint address' mint --disable -u devnet --authority ./secretKey.json
+spl-token authorize 'spl token mint address' freeze --disable -u devnet --authority ./secretKey.json
 ```
 
 ### Step 5: Create Openbook Market Id

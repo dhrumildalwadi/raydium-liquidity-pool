@@ -1,8 +1,19 @@
+require('dotenv').config();
+
 const fs = require('fs');
-const baseTokenData = require('../data/metadata.json');
-const quoteTokenData = require('../data/quoteTokenData.json');
-const tokenDetails = require('../data/tokenDetails.json');
-const pool = require('../data/pool.json');
+const {
+  connection,
+  makeTxVersion,
+  PROGRAMIDS,
+  wallet,
+  feeDestinationAddress,
+  network,
+  tokenSymbol,
+} = require('../config');
+const baseTokenData = require(`../data/${network}/${tokenSymbol}/metadata.json`);
+const quoteTokenData = require(`../data/${network}/${tokenSymbol}/quoteTokenData.json`);
+const tokenDetails = require(`../data/${network}/${tokenSymbol}/tokenDetails.json`);
+const pool = require(`../data/${network}/${tokenSymbol}/pool.json`);
 const { BN } = require('bn.js');
 const {
   Liquidity,
@@ -10,13 +21,6 @@ const {
   TOKEN_PROGRAM_ID,
 } = require('@raydium-io/raydium-sdk');
 const { PublicKey } = require('@solana/web3.js');
-const {
-  connection,
-  makeTxVersion,
-  PROGRAMIDS,
-  wallet,
-  feeDestinationAddress,
-} = require('../config');
 const { buildAndSendTx, getWalletTokenAccount } = require('./util');
 
 const calcMarketStartPrice = (input) => {
@@ -121,7 +125,7 @@ const ammCreatePool = async (input) => {
     console.log('txids', txids);
     console.log('Amm Id:', address.ammId.toString());
 
-    const filePath = './data/pool.json';
+    const filePath = `./data/${network}/${tokenSymbol}/pool.json`;
 
     const rawData = fs.readFileSync(filePath);
 

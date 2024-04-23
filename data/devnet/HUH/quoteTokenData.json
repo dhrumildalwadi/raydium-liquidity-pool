@@ -1,6 +1,6 @@
 {
   "name": "quote token name",
-  "symbol": "quote token",
+  "symbol": "quote token symbol",
   "address": "quote token address",
   "decimals": 6
 }

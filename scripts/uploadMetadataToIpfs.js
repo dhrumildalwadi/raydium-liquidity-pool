@@ -1,8 +1,9 @@
-const fs = require('fs');
-const tokenMetadata = require('../data/metadata.json');
-const pinataSDK = require('@pinata/sdk');
-
 require('dotenv').config();
+
+const fs = require('fs');
+const { network, tokenSymbol } = require('../config');
+const tokenMetadata = require(`../data/${network}/${tokenSymbol}/metadata.json`);
+const pinataSDK = require('@pinata/sdk');
 
 const uploadMetadataToIpfs = async () => {
   try {
@@ -11,7 +12,7 @@ const uploadMetadataToIpfs = async () => {
       process.env.PINATA_SECRET_KEY,
     );
 
-    const imagePath = './data/image/token-image.jpg';
+    const imagePath = `./data/${network}/${tokenSymbol}/image/token-image.jpg`;
     const image = fs.createReadStream(imagePath);
 
     const result = await pinata.pinFileToIPFS(image, {
@@ -31,7 +32,7 @@ const uploadMetadataToIpfs = async () => {
     });
     console.log('JSON uploaded to IPFS:', metadataResult.IpfsHash);
 
-    const filePath = './data/metadata.json';
+    const filePath = `../data/${network}/${tokenSymbol}/metadata.json`;
     const rawData = fs.readFileSync(filePath);
 
     let info = JSON.parse(rawData.toString());

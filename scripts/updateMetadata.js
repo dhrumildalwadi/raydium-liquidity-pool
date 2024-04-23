@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const fs = require('fs');
 const { clusterApiUrl, PublicKey } = require('@solana/web3.js');
 const { createUmi } = require('@metaplex-foundation/umi-bundle-defaults');
@@ -10,11 +12,11 @@ const {
 } = require('@metaplex-foundation/umi-web3js-adapters');
 const { createSignerFromKeypair } = require('@metaplex-foundation/umi');
 const { base58 } = require('@metaplex-foundation/umi/serializers');
-const { wallet: payer } = require('../config');
-const metadata = require('../data/metadata.json');
+const { wallet: payer, network, tokenSymbol } = require('../config');
+const metadata = require(`../data/${network}/${tokenSymbol}/metadata.json`);
 
 const uploadMetadataForToken = async (offChainMetadata) => {
-  const endpoint = clusterApiUrl(`${process.env.SOLANA_NETWORK}`);
+  const endpoint = clusterApiUrl(`${network}`);
 
   const umi = createUmi(endpoint);
 
@@ -24,7 +26,7 @@ const uploadMetadataForToken = async (offChainMetadata) => {
   umi.identity = signer;
   umi.payer = signer;
 
-  const filePath = './data/tokenDetails.json';
+  const filePath = `./data/${network}/${tokenSymbol}/tokenDetails.json`;
   const rawData = fs.readFileSync(filePath);
 
   const tokenDetails = JSON.parse(rawData.toString());

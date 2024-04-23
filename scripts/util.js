@@ -3,7 +3,7 @@ const {
   SPL_ACCOUNT_LAYOUT,
   TOKEN_PROGRAM_ID,
 } = require('@raydium-io/raydium-sdk');
-const { PublicKey, VersionedTransaction } = require('@solana/web3.js');
+const { VersionedTransaction } = require('@solana/web3.js');
 
 const {
   addLookupTableInfo,

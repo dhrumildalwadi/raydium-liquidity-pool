@@ -1,6 +1,16 @@
-const baseTokenData = require('../data/metadata.json');
-const quoteTokenData = require('../data/quoteTokenData.json');
-const tokenDetails = require('../data/tokenDetails.json');
+require('dotenv').config();
+
+const {
+  connection,
+  makeTxVersion,
+  PROGRAMIDS,
+  wallet,
+  network,
+  tokenSymbol,
+} = require('../config');
+const baseTokenData = require(`../data/${network}/${tokenSymbol}/metadata.json`);
+const quoteTokenData = require(`../data/${network}/${tokenSymbol}/quoteTokenData.json`);
+const tokenDetails = require(`../data/${network}/${tokenSymbol}/tokenDetails.json`);
 const fs = require('fs');
 const {
   MarketV2,
@@ -8,7 +18,6 @@ const {
   TOKEN_PROGRAM_ID,
 } = require('@raydium-io/raydium-sdk');
 const { PublicKey } = require('@solana/web3.js');
-const { connection, makeTxVersion, PROGRAMIDS, wallet } = require('../config');
 const { buildAndSendTx } = require('./util');
 
 async function createMarket(input) {
@@ -54,7 +63,7 @@ async function createMarket(input) {
     console.log('txids', txids);
     console.log('Market Id', address.marketId.toString());
 
-    const filePath = './data/pool.json';
+    const filePath = `./data/${network}/${tokenSymbol}/pool.json`;
 
     fs.writeFileSync(
       filePath,

@@ -7,7 +7,7 @@ const pkey = process.env.PRIVATE_KEY;
 const privateKey = base58.decode(pkey);
 
 // Define the file path for the JSON file
-const filePath = './data/secretKey.json';
+const filePath = './secretKey.json';
 
 // Write the JSON data to the file
 fs.writeFileSync(filePath, JSON.stringify(Array.from(privateKey)));

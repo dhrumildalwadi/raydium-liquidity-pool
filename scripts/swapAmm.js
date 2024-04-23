@@ -1,5 +1,15 @@
+require('dotenv').config();
+
 const assert = require('assert');
-const pool = require('../data/pool.json');
+const {
+  connection,
+  makeTxVersion,
+  wallet,
+  network,
+  tokenSymbol,
+  poolTokens,
+} = require('../config');
+const pool = require(`../data/${network}/${tokenSymbol}/pool.json`);
 const {
   jsonInfo2PoolKeys,
   Liquidity,
@@ -9,7 +19,6 @@ const {
   TOKEN_PROGRAM_ID,
 } = require('@raydium-io/raydium-sdk');
 const { PublicKey } = require('@solana/web3.js');
-const { connection, makeTxVersion, wallet } = require('../config');
 const { formatAmmKeysById } = require('./formatAmmKeysById');
 const { buildAndSendTx, getWalletTokenAccount } = require('./util');
 const { BN } = require('bn.js');
@@ -53,20 +62,20 @@ async function swapOnlyAmm(input) {
 (async () => {
   const inputToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('input token id'),
-    6, // input token decimals
-    'input token symbol',
-    'input token name',
+    poolTokens.inputToken.tokenPublicKey,
+    poolTokens.inputToken.decimals, // input token decimals
+    poolTokens.inputToken.tokenSymbol,
+    poolTokens.inputToken.tokenName,
   );
   const outputToken = new Token(
     TOKEN_PROGRAM_ID,
-    new PublicKey('output token id'),
-    9, // output token decimals
-    'output token symbol',
-    'output token name',
+    poolTokens.outputToken.tokenPublicKey,
+    poolTokens.outputToken.decimals, // output token decimals
+    poolTokens.outputToken.tokenSymbol,
+    poolTokens.outputToken.tokenName,
   );
   const targetPool = pool.ammId;
-  const inputTokenAmount = new TokenAmount(inputToken, new BN(5000000));
+  const inputTokenAmount = new TokenAmount(inputToken, new BN(100000));
   const slippage = new Percent(1, 100);
   const walletTokenAccounts = await getWalletTokenAccount(
     connection,
